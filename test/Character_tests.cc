@@ -2,8 +2,6 @@
 
 #include <Character/Character.h>
 
-#define CAPACITY 10
-
 using namespace character;
 using namespace std;
 
@@ -106,9 +104,7 @@ TEST(CharacterListTests, insert)
     EXPECT_EQ(list[0]->get_type(), knight->get_type());
     EXPECT_EQ(list[1]->get_type(), Berserk->get_type());
     EXPECT_EQ(list[2]->get_type(), Assasin->get_type());
-    delete Berserk;
-    delete knight;
-    delete Assasin;
+
 }
 
 TEST(CharacterListTests, remove)

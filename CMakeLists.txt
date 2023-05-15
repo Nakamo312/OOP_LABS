@@ -31,8 +31,8 @@ add_library(characters-v1 SHARED
 )
 target_include_directories(characters-v1 PUBLIC "include")
 
+add_executable(character-v1-app  "consoleApp/App.cc" )
+target_link_libraries(character-v1-app  characters-v1)
 # Объявляем тесты
-add_executable(character-v1-tests
-    "test/Character_tests.cc"
-)
+add_executable(character-v1-tests "test/Character_tests.cc")
 target_link_libraries(character-v1-tests characters-v1 GTest::gtest_main)
