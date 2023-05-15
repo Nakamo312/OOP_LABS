@@ -14,7 +14,8 @@ namespace character
 	int const KnightAbilityChance = 15;
 	int const AssasinAbilityChance = 25;
 	int const BerserkAbilityChance = 15;
-
+	class Character;
+	using CharacterPtr = Character*;
 //-------------------------------------------------------------------------------------------
 
  //-------------------------------------------------------------------------------------------
@@ -31,9 +32,9 @@ namespace character
 
 		public:
 			Character(Type _type, float health, float armor, float damage);
-			static Character createKnight(float health, float armor, float damage);
-			static Character createAssasin(float health, float armor, float damage);
-			static Character createBerserk(float health, float armor, float damage);
+			static CharacterPtr createKnight(float health, float armor, float damage);
+			static CharacterPtr createAssasin(float health, float armor, float damage);
+			static CharacterPtr createBerserk(float health, float armor, float damage);
 
 			Character();
 
@@ -50,7 +51,8 @@ namespace character
 			float CalcDamage() const;
 			void Attack(Character& otherHero) const;
 			void takeDamage(const Character& otherHero);
-
+			CharacterPtr clone() const;
+			CharacterPtr operator=(const Character& rhs);
 			void ability();
 	};
 //-------------------------------------------------------------------------------------------
@@ -58,25 +60,27 @@ namespace character
 //-------------------------------------------------------------------------------------------
 	class CharacterList 
 	{
-		public:
-			static const int CAPACITY = 10;
-
 		private:
-			Character _characters[CAPACITY];
+			CharacterPtr* _characters;
 			int _size;
 
 		public:
 			CharacterList();
-			CharacterList(Character _character[], int _size);
+			CharacterList(const CharacterList& _characters);
+			CharacterList& operator=(const CharacterList& rhs);
 			int size() const;
 
-			Character& operator[](int index) ;
+			CharacterPtr operator[](const int index) const;
 
 
-			void insert(int index, Character hero);
-			void remove(int index);
+			void insert(CharacterPtr hero, int index);
+			void insert(CharacterPtr hero);
+			void remove(CharacterPtr hero);
+			void swap(CharacterList& hero);
+			~CharacterList();
+			int index_of_strongest_hero() const;
 
-			int search_strongest() const;
+			
 	};
 
 

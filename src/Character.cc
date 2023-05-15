@@ -31,19 +31,19 @@ Character:: Character(const Type type, const float health, const float armor, co
 	}
 }
 
-Character Character::createKnight(const float health, const float armor, const float damage)
+CharacterPtr Character::createKnight(const float health, const float armor, const float damage)
 {
-	return Character(Type::Knight, health, armor, damage);
+	return new Character(Type::Knight, health, armor, damage);
 }
 
-Character Character::createAssasin(const float health, const float armor, const float damage)
+CharacterPtr Character::createAssasin(const float health, const float armor, const float damage)
 {
-	return Character(Type::Assasin, health, armor, damage);
+	return new Character(Type::Assasin, health, armor, damage);
 }
 	
-Character Character::createBerserk(const float health, const float armor, const float damage)
+CharacterPtr Character::createBerserk(const float health, const float armor, const float damage)
 {
-	return Character(Type::Berserk, health, armor, damage);
+	return new Character(Type::Berserk, health, armor, damage);
 }
 //-------------------------------------------------------------------------------------------
 
@@ -165,65 +165,149 @@ void Character:: ability()
 		abilityScale = 3;
 	}
 }
+CharacterPtr Character::clone() const 
+{
+	return new Character(_type, health,armor,damage);
+}
+
 //-------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------
-CharacterList::CharacterList() : _size(0)
+CharacterList::CharacterList() : _size(0), _characters(nullptr)
 {
 
 }
-CharacterList::CharacterList(Character _character[], int _size) {
-	this->_size = _size;
-	for (int i = 0; i <= _size; i++) 
+CharacterList::CharacterList(const CharacterList& other) : _characters(new CharacterPtr[other._size]),_size(other._size)
+{
+	for (int i = 0; i < _size; ++i)
 	{
-		_characters[i] = Character(_character[i].get_type(), _character[i].get_health(), _character[i].get_armor(), _character[i].get_damage());
+		_characters[i] = other[i]->clone();
 	}
-
 }
-int CharacterList::size() const
+
+int CharacterList:: size() const
 {
 	return _size;
 }
 
-void CharacterList::insert(int index, Character ch) {
-	if (index >= CAPACITY || index < 0) {
-		throw runtime_error("error1");
-	}
-	for (int i = _size; i >= index; --i) {
-		_characters[i] = _characters[i - 1];
+void CharacterList::insert(CharacterPtr ch, int index)
+{	
 
-	} ++_size;
-	_characters[index] = ch;
+		auto new_characters = new CharacterPtr[_size + 1];
+		for (int i = 0; i <= _size; ++i) 
+		{
+			if (i == index)
+			{
+				new_characters[i] = ch;
+			}
+			else if (i < index)
+			{
+				new_characters[i] = _characters[i];
+			}
+			else
+			{
+				new_characters[i] = _characters[i - 1];
+			}
+		} 
+		delete[] _characters;
+		_characters = new_characters;
+		++_size;
+
+
 }
+void CharacterList::insert(CharacterPtr hero)
+{
+	auto new_characters = new CharacterPtr[_size + 1];
 
-void CharacterList::remove(int index) {
-	if (index >= CAPACITY || index < 0) {
-		throw runtime_error("error1");
+	for (int i = 0; i < _size; ++i) {
+		new_characters[i] = _characters[i];
 	}
-	for (int i = index; i < _size - 1; ++i) {
-		_characters[i] = _characters[i + 1];
-	}  --_size;
-}
+	new_characters[_size] = hero;
 
-Character& CharacterList::operator[](int index)  {
-	if (index >= CAPACITY || index < 0) {
-		throw runtime_error("error1");
+	delete[] _characters;
+	_characters = new_characters;
+
+	++_size;
+
+}
+void CharacterList::swap(CharacterList& other) {
+	std::swap(this->_characters, other._characters);
+	std::swap(this->_size, other._size);
+}
+void CharacterList::remove(CharacterPtr other) 
+{
+	bool search = false;
+	for (int i = 0; i <= _size; ++i)
+	{
+		if (_characters[i] == other)
+		{
+			search = true;
+			break;
+		}
+	}
+	if (search)
+	{
+		auto new_characters = new CharacterPtr[_size - 1];
+		bool flag = true;
+		for (int i = 0; i < _size; ++i)
+		{
+			if (_characters[i] != other && flag)
+			{
+
+				new_characters[i] = _characters[i];
+			}
+			else
+			{
+				flag = false;
+				new_characters[i] = _characters[i + 1];
+			}
+		}
+		
+		delete _characters;
+		_characters = new_characters;
+		--_size;
+
+	}
+	else
+	{
+		throw runtime_error("[CharacterList::remove()] object not found");
+	}
+
+}
+CharacterList& CharacterList:: operator=(const CharacterList& rhs) {
+	CharacterList copy(rhs);
+	copy.swap(*this);
+	return *this;
+}
+CharacterPtr CharacterList::operator[](const int index) const {
+	if (index >= _size || index < 0) {
+		throw runtime_error("[CharacterList::operator[] ] invalid index");
 	}
 	return _characters[index];
 }
+CharacterList::~CharacterList() {
+	for (int i = 0; i < _size; ++i) {
+		delete _characters[i];
+	}
+	delete[] _characters;
+}
 
-int CharacterList::search_strongest() const
+int CharacterList::index_of_strongest_hero() const
 {
 	float max_damage = 0.f;
 	int index = 0;
-	for (int i = 0; i < _size - 1; i++)
+	for (int i = 0; i < _size; ++i)
 	{
-		if (_characters[i].get_damage() > max_damage)
+		if (_characters[i]->get_damage() > max_damage)
 		{
-			max_damage = _characters[i].get_damage();
+			max_damage = _characters[i]->get_damage();
 			index = i;
 		}
 	}
 	return index;
 }
 //-------------------------------------------------------------------------------------------
+
+
+
+
