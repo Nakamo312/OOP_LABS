@@ -1,40 +1,36 @@
-#include <Character/Character.h>
-#include <string>
 #include <iostream>
-using namespace character;
+#include <Application/Application.h>
+#include<string>
+#include <windows.h>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <iomanip>
+using namespace application;
+
 using namespace std;
-
-void printMenu();
-CharacterPtr createHero();
-
-
-void printMenu()
-{
-	cout << "======================================" << endl;
-	cout << "|| 1 - добавить геро€ в список      ||"<<endl;
-	cout << "|| 2 - удалить геро€ из списка      ||" << endl;
-	cout << "|| 3 - вывести список героев        ||" << endl;
-	cout << "======================================" << endl;
-}
-
 
 int main()
 {
-	string answer = "";
-
-	while (answer != "off")
+	Application app = Application();
+	app.insert(Item::createItem(menuItems[0], 0, 0));
+	app.insert(Item::createItem(menuItems[1], 0, 1));
+	app.insert(Item::createItem(menuItems[2], 0, 2));
+	app.insert(Item::createItem(Heroes[0], 1, 0));
+	app.insert(Item::createItem(Heroes[1], 1, 1));
+	app.insert(Item::createItem(Heroes[2], 1, 2));
+	app.insert(Item::createItem(Heroes[3], 1, 3));
+	app.insert(Item::createItem("—оздать геро€", 2, 0));
+	app.insert(Item::createItem("Ќазад", 2, 1));
+	while(app.get_level()!=-1)
 	{
-		printMenu();
-		cin >> answer;
-
-		if (answer == "1")
+		app.printMenu(0,0,9);
+		if (app.get_level() == 0)
 		{
-			//CharacterPtr h = createHero();
+			app.print_heroes(50, 0, Red);
 		}
-		else if (answer == "2")
-		{
-
-		}
+		app.input();
 	}
+	
 	return 0;
 }

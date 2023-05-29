@@ -1,5 +1,5 @@
 #pragma once
-
+#include <string>
 namespace character 
 {
 //-------------------------------------------------------------------------------------------
@@ -26,15 +26,19 @@ namespace character
 			float health;
 			float armor;
 			float damage;
+			float normal_armor;
+			float normal_damage;
 			int abilityChance;
 			float abilityScale;
 			bool dodge;
+			bool pass_abylity_proc = 0;
+			std::string name;
 
 		public:
-			Character(Type _type, float health, float armor, float damage);
-			static CharacterPtr createKnight(float health, float armor, float damage);
-			static CharacterPtr createAssasin(float health, float armor, float damage);
-			static CharacterPtr createBerserk(float health, float armor, float damage);
+			Character(Type _type, float health, float armor, float damage, std::string name);
+			static CharacterPtr createKnight(float health, float armor, float damage, std::string name);
+			static CharacterPtr createAssasin(float health, float armor, float damage, std::string name);
+			static CharacterPtr createBerserk(float health, float armor, float damage, std::string name);
 
 			Character();
 
@@ -42,15 +46,19 @@ namespace character
 			Type get_type() const;
 			float get_armor() const;
 			float get_damage() const;
+			std::string get_name()const;
 			int get_abilityChance() const;
+			bool get_abylity_proc() const;
+			float get_normal_damage() const;
+			float get_normal_armor() const;
 
 			void set_health(float _health);
 			void set_armor(float _armor);
 			void set_damage(float _damage);
-
-			float CalcDamage() const;
-			void Attack(Character& otherHero) const;
-			void takeDamage(const Character& otherHero);
+			void set_name(std::string _name);
+			float CalcDamage();
+			void Attack(Character& otherHero);
+			void takeDamage(Character& otherHero);
 			CharacterPtr clone() const;
 			CharacterPtr operator=(const Character& rhs);
 			void ability();

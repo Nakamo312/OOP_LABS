@@ -10,12 +10,12 @@ using namespace std;
 
 
 //-------------------------------------------------------------------------------------------
-Character::Character() : _type(Type::Knight), health(300), armor(5), damage(56), abilityChance(character:: KnightAbilityChance), abilityScale(1), dodge(0)
+Character::Character() : _type(Type::Knight), health(300), armor(5), damage(56), abilityChance(character:: KnightAbilityChance), abilityScale(1), dodge(0),normal_armor(armor),normal_damage(damage)
 { 
 	
 }
 
-Character:: Character(const Type type, const float health, const float armor, const float damage) : _type(type), health(health), armor(armor), damage(damage), abilityScale(1), dodge(0), abilityChance(0)
+Character:: Character(const Type type, const float health, const float armor, const float damage, string name) : _type(type), health(health), armor(armor), damage(damage), abilityScale(1), dodge(0), abilityChance(0),name(name), normal_armor(armor), normal_damage(damage)
 {
 	if (type == Type::Knight)
 	{
@@ -31,19 +31,19 @@ Character:: Character(const Type type, const float health, const float armor, co
 	}
 }
 
-CharacterPtr Character::createKnight(const float health, const float armor, const float damage)
+CharacterPtr Character::createKnight(const float health, const float armor, const float damage,string name)
 {
-	return new Character(Type::Knight, health, armor, damage);
+	return new Character(Type::Knight, health, armor, damage,name);
 }
 
-CharacterPtr Character::createAssasin(const float health, const float armor, const float damage)
+CharacterPtr Character::createAssasin(const float health, const float armor, const float damage,string name)
 {
-	return new Character(Type::Assasin, health, armor, damage);
+	return new Character(Type::Assasin, health, armor, damage,name);
 }
 	
-CharacterPtr Character::createBerserk(const float health, const float armor, const float damage)
+CharacterPtr Character::createBerserk(const float health, const float armor, const float damage,string name)
 {
-	return new Character(Type::Berserk, health, armor, damage);
+	return new Character(Type::Berserk, health, armor, damage,name);
 }
 //-------------------------------------------------------------------------------------------
 
@@ -62,6 +62,10 @@ float Character::get_damage() const
 {
 	return damage;
 }
+std::string Character::get_name() const
+{
+	return name;
+}
 
 int Character::get_abilityChance() const
 {
@@ -75,7 +79,22 @@ void Character::set_health(float _health)
 {
 	health = _health;
 }
-
+bool Character::get_abylity_proc() const
+{
+	return pass_abylity_proc;
+}
+float Character::get_normal_damage() const
+{
+	return normal_damage;
+}
+float Character::get_normal_armor() const
+{
+	return normal_armor;
+}
+void Character::set_name(std:: string _name) 
+{
+	name = _name;
+}
 void Character::set_armor(float _armor)
 {
 	armor = _armor;
@@ -89,66 +108,77 @@ void Character::set_damage(float _damage)
 //-------------------------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------------------------
-float Character:: CalcDamage() const
+float Character:: CalcDamage()
 {
 	if (_type == Type::Berserk)
 	{
+		pass_abylity_proc = 0;
 		int chance = 1 + rand() % 100;
 		if (chance <= abilityChance * abilityScale)
 		{
+			pass_abylity_proc = 1;
 			return damage * 3;
 		}
 		return damage;
 	}
 	return damage;
 }
-void Character::Attack(Character& otherHero) const
+void Character::Attack(Character& otherHero)
 {
 	
+	pass_abylity_proc = 0;
 	otherHero.takeDamage(*this);
 	if (_type == Type::Assasin)
 	{
 		int chance = 1 + rand() % 100;
 		if (chance <= abilityChance * abilityScale)
 		{
-			Attack(otherHero);
+			pass_abylity_proc = 1;
 		}
 	}
+	armor = normal_armor;
+	damage = normal_damage;
 }
-void Character::takeDamage(const Character& otherHero)
+void Character::takeDamage( Character& otherHero)
 {
 
 	if (_type == Type::Knight)
 	{
+		pass_abylity_proc = 0;
 		int chance = 1 + rand() % 100;
 		if (chance <= abilityChance * abilityScale)
 		{
-			health -=  ((otherHero.CalcDamage() - otherHero.CalcDamage() *(armor/100))/ 2);
+			health -= otherHero.CalcDamage()*((1 - (armor/100))/ 2);
+			pass_abylity_proc = 1;
+			abilityScale = 1;
 		}
 		else
 		{
-			health -=  (otherHero.CalcDamage() - otherHero.CalcDamage() *  (armor / 100));
+			health -=  otherHero.CalcDamage()*(1 - (armor/100));
 		}
 	}
 	else if (_type == Type::Assasin)
 	{
 		if (dodge)
 		{
-			health -=  ((otherHero.CalcDamage() - otherHero.CalcDamage() *  (armor / 100)) * 0);
+			
+			dodge = 0;
 		}
 		else
 		{
-			health -=  (otherHero.CalcDamage() - otherHero.CalcDamage() *  (armor / 100));
+			health -= otherHero.CalcDamage() * (1 - (armor / 100));
 		}
 	}
 	else
 	{
-		health -=  (otherHero.CalcDamage() - otherHero.CalcDamage() * (armor / 100));
+		health -= otherHero.CalcDamage() * (1 - (armor / 100));
 	}
 }
 
 void Character:: ability()
 {
+	armor = normal_armor;
+	damage = normal_damage;
 	if (_type == Type::Knight)
 	{
 		armor = (1.25f * armor) + 2;
@@ -160,6 +190,7 @@ void Character:: ability()
 	}
 	else if (_type == Type::Berserk)
 	{
+		pass_abylity_proc = 0;
 		armor =  (0.5f * armor) + 1;
 		damage =  (1.5f * damage);
 		abilityScale = 3;
@@ -167,7 +198,7 @@ void Character:: ability()
 }
 CharacterPtr Character::clone() const 
 {
-	return new Character(_type, health,armor,damage);
+	return new Character(_type, health,armor,damage,name);
 }
 
 //-------------------------------------------------------------------------------------------

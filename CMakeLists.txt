@@ -29,10 +29,20 @@ add_library(characters-v1 SHARED
     "src/Character.cc"
 
 )
+add_library(app-v1 SHARED
+
+    "include/Application/Application.h"
+    "src/Application.cc"
+
+)
 target_include_directories(characters-v1 PUBLIC "include")
+target_include_directories(app-v1 PUBLIC "include")
 
 add_executable(character-v1-app  "consoleApp/App.cc" )
-target_link_libraries(character-v1-app  characters-v1)
+target_link_libraries(character-v1-app  characters-v1 )
+target_link_libraries(character-v1-app  app-v1 )
+
+
 # Объявляем тесты
 add_executable(character-v1-tests "test/Character_tests.cc")
 target_link_libraries(character-v1-tests characters-v1 GTest::gtest_main)
