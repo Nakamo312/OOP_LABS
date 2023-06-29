@@ -170,20 +170,20 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 					}
 					else if ((menuItems[i]->menuItem == "Рыцарь") && menuItems[i]->level == level && menuItems[i]->key == select)
 					{
-						createHero(character::Type::Knight);
+						createKnight();
 						break;
 
 
 					}
 					else if ((menuItems[i]->menuItem == "Ассасин") && menuItems[i]->level == level && menuItems[i]->key == select)
 					{
-						createHero(character::Type::Assasin);
+						createAssasin();
 						break;
 
 					}
 					else if ((menuItems[i]->menuItem == "Берсерк") && menuItems[i]->level == level && menuItems[i]->key == select)
 					{
-						createHero(character::Type::Berserk);
+						createBerserk();
 						break;
 
 					}
@@ -222,7 +222,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 			setcur(0, 0);
 	};
 
-	void Application::createHero(character::Type type)
+	void Application::createKnight()
 	{
 		system("cls");
 		string hero_class;
@@ -232,9 +232,6 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 		string passabylity;
 		string passabylityname;
 		int color = 0;
-		CharacterPtr hero = nullptr;
-		if (type == character::Type::Knight)
-		{
 			hero_class = "Рыцарь";
 			color = DarkGray;
 			description = "	Благородный воитель в сверкающих доспехах, приверженный кодексу чести.Его способности ориентированы исключительно на бой. Имеет повышенную защиту.";
@@ -242,38 +239,13 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 			abylityname = "Защитная стойка:";
 			passabylity = "	(Пассивная) Вероятность 15% снизить любой получаемый урон." ;
 			abylity = "	Увеличивает собственную броню, но уменьшает наносимый урон.";
-			
-			hero = Character::createKnight(0, 0, 0," ");
-		}
-		else if (type == character::Type::Assasin)
-		{
-			hero_class = "Ассасин";
-			color = LightRed;
-			description = "	Профессиональный убийца, владеющий навыками отравления, маскировки, скрытного перемещения и внезапных смертельных ударов.";			
-			passabylityname = "Неистовство ветра:";
-			abylityname = "Шаг в тень:";
-			passabylity = " (Пассивная) Вероятность 25% повторной атаки в этот же ход.";
-			abylity = " Любая следующая атака по персонажу будет обречена на 100% промах.";
-			hero = Character::createAssasin(0, 0, 0,"");
-		}
-		else if (type == character::Type::Berserk)
-		{
-			hero_class = "Берсерк";
-			color = Brown;
-			description = "	Главные достоинства - это сила и выносливость, намного превышающие аналогичные параметры у большинства других классов. Это достойный класс для ближних боёв, способный постоять за себя. ";
-			description = "	Благородный воитель в сверкающих доспехах, приверженный кодексу чести.Его способности ориентированы исключительно на бой. Имеет повышенную защиту.";
-			passabylityname = "Тяжелая рука";
-			abylityname = "Ярость безумца";
-			passabylity = "";
-			abylity = "";
-			hero = Character::createBerserk(0, 0, 0," ");
-		}
+			auto hero = make_shared<character::Knight>(0, 0, 0, "");
 
 		float health;
 		float armor;
 		float damage;
 		string name;
-		cout << "________________________________"<<endl;
+		std::cout << "________________________________"<<endl;
 		cout << "|                              |" << endl;
 		cout << "|" << "          ";
 		SetConsoleTextAttribute(hconsole,color);
@@ -388,7 +360,282 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 			//insert(Item::createItem(name,2,list.size()-1));
 		}		
 	}
+	void Application::createAssasin()
+	{
+		system("cls");
+		string hero_class;
+		string description;
+		string abylity;
+		string abylityname;
+		string passabylity;
+		string passabylityname;
+		int color = 0;
+		hero_class = "Ассасин";
+		color = LightRed;
+		description = "	Профессиональный убийца, владеющий навыками отравления, маскировки, скрытного перемещения и внезапных смертельных ударов.";
+		passabylityname = "Неистовство ветра:";
+		abylityname = "Шаг в тень:";
+		passabylity = " (Пассивная) Вероятность 25% повторной атаки в этот же ход.";
+		abylity = " Любая следующая атака по персонажу будет обречена на 100% промах.";
+		auto hero = make_shared<character::Assasin>(0, 0, 0, "");
 
+		float health;
+		float armor;
+		float damage;
+		string name;
+		std::cout << "________________________________" << endl;
+		cout << "|                              |" << endl;
+		cout << "|" << "          ";
+		SetConsoleTextAttribute(hconsole, color);
+		cout << setw(20) << hero_class;
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+		cout << "|                              |" << endl;
+		cout << "|";
+		SetConsoleTextAttribute(hconsole, White);
+		cout << setiosflags(ios::left) << setw(30) << "  Здоровье:";
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+
+		cout << "|";
+		SetConsoleTextAttribute(hconsole, White);
+		cout << setiosflags(ios::left) << setw(30) << "  Броня:";
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+
+		cout << "|";
+		SetConsoleTextAttribute(hconsole, White);
+		cout << setiosflags(ios::left) << setw(30) << "  Урон:";
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+		cout << "|                              |" << endl;
+		cout << "--------------------------------" << endl;
+
+		int count = 2;
+		setcur(50, count);
+		SetConsoleTextAttribute(hconsole, Yellow);
+		cout << "Описание: ";
+		SetConsoleTextAttribute(hconsole, White);
+		for (int i = 0; i < size(description); ++i)
+		{
+			if (i % 50 == 0)
+			{
+				count++;
+				setcur(50, count);
+			}
+			cout << setiosflags(ios::left) << description[i];
+
+		}
+		count += 2;
+		setcur(50, count);
+		SetConsoleTextAttribute(hconsole, Yellow);
+		cout << "Способности: " << endl;
+		count++;
+		setcur(55, count);
+		SetConsoleTextAttribute(hconsole, LightCyan);
+		cout << passabylityname;
+		SetConsoleTextAttribute(hconsole, White);
+		for (int i = 0; i < size(passabylity); ++i)
+		{
+			if (i % 40 == 0 && (i != 0))
+			{
+				count++;
+				setcur(52, count);
+			}
+			cout << setiosflags(ios::left) << passabylity[i];
+
+		}
+		count++;
+		setcur(55, count);
+		SetConsoleTextAttribute(hconsole, LightCyan);
+		cout << abylityname;
+		SetConsoleTextAttribute(hconsole, White);
+		for (int i = 0; i < size(abylity); ++i)
+		{
+			if (i % 40 == 0 && (i != 0))
+			{
+				count++;
+				setcur(52, count);
+			}
+			cout << setiosflags(ios::left) << abylity[i];
+
+		}
+		SetConsoleTextAttribute(hconsole, 9);
+		//cout << setw(10)<< hero_class << setw(10);
+		count += 3;
+		setcur(13, 4);
+		cin >> health;
+		setcur(13, 5);
+		cin >> armor;
+		setcur(13, 6);
+		cin >> damage;
+		SetConsoleTextAttribute(hconsole, LightRed);
+		setcur(0, 9);
+		cout << "--------------------------------" << endl;
+		cout << "|                              |" << endl;
+		cout << "|                              |" << endl;
+		cout << "|                              |" << endl;
+		cout << "--------------------------------" << endl;
+		setcur(3, 11);
+		SetConsoleTextAttribute(hconsole, White);
+		cout << "Введите имя: ";
+		cin >> name;
+		level = 2;
+		select = 0;
+		while (level == 2)
+		{
+			printMenu(30, 20, Red);
+			input();
+		}
+		level = 0;
+		if (select == 0)
+		{
+			hero->set_armor(armor);
+			hero->set_health(health);
+			hero->set_damage(damage);
+			hero->set_name(name);
+			list.insert(hero);
+			//insert(Item::createItem(name,2,list.size()-1));
+		}
+	}
+	void Application::createBerserk()
+	{
+		system("cls");
+		string hero_class;
+		string description;
+		string abylity;
+		string abylityname;
+		string passabylity;
+		string passabylityname;
+		int color = 0;
+		hero_class = "Берсерк";
+		color = Brown;
+		description = "	Главные достоинства - это сила и выносливость, намного превышающие аналогичные параметры у большинства других классов. Это достойный класс для ближних боёв, способный постоять за себя. ";
+		passabylityname = "Тяжелая рука";
+		abylityname = "Ярость безумца";
+		passabylity = "";
+		abylity = "";
+		auto hero = make_shared<character::Berserk>(0, 0, 0, "");
+
+		float health;
+		float armor;
+		float damage;
+		string name;
+		std::cout << "________________________________" << endl;
+		cout << "|                              |" << endl;
+		cout << "|" << "          ";
+		SetConsoleTextAttribute(hconsole, color);
+		cout << setw(20) << hero_class;
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+		cout << "|                              |" << endl;
+		cout << "|";
+		SetConsoleTextAttribute(hconsole, White);
+		cout << setiosflags(ios::left) << setw(30) << "  Здоровье:";
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+
+		cout << "|";
+		SetConsoleTextAttribute(hconsole, White);
+		cout << setiosflags(ios::left) << setw(30) << "  Броня:";
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+
+		cout << "|";
+		SetConsoleTextAttribute(hconsole, White);
+		cout << setiosflags(ios::left) << setw(30) << "  Урон:";
+		SetConsoleTextAttribute(hconsole, 9);
+		cout << "|" << endl;
+		cout << "|                              |" << endl;
+		cout << "--------------------------------" << endl;
+
+		int count = 2;
+		setcur(50, count);
+		SetConsoleTextAttribute(hconsole, Yellow);
+		cout << "Описание: ";
+		SetConsoleTextAttribute(hconsole, White);
+		for (int i = 0; i < size(description); ++i)
+		{
+			if (i % 50 == 0)
+			{
+				count++;
+				setcur(50, count);
+			}
+			cout << setiosflags(ios::left) << description[i];
+
+		}
+		count += 2;
+		setcur(50, count);
+		SetConsoleTextAttribute(hconsole, Yellow);
+		cout << "Способности: " << endl;
+		count++;
+		setcur(55, count);
+		SetConsoleTextAttribute(hconsole, LightCyan);
+		cout << passabylityname;
+		SetConsoleTextAttribute(hconsole, White);
+		for (int i = 0; i < size(passabylity); ++i)
+		{
+			if (i % 40 == 0 && (i != 0))
+			{
+				count++;
+				setcur(52, count);
+			}
+			cout << setiosflags(ios::left) << passabylity[i];
+
+		}
+		count++;
+		setcur(55, count);
+		SetConsoleTextAttribute(hconsole, LightCyan);
+		cout << abylityname;
+		SetConsoleTextAttribute(hconsole, White);
+		for (int i = 0; i < size(abylity); ++i)
+		{
+			if (i % 40 == 0 && (i != 0))
+			{
+				count++;
+				setcur(52, count);
+			}
+			cout << setiosflags(ios::left) << abylity[i];
+
+		}
+		SetConsoleTextAttribute(hconsole, 9);
+		//cout << setw(10)<< hero_class << setw(10);
+		count += 3;
+		setcur(13, 4);
+		cin >> health;
+		setcur(13, 5);
+		cin >> armor;
+		setcur(13, 6);
+		cin >> damage;
+		SetConsoleTextAttribute(hconsole, LightRed);
+		setcur(0, 9);
+		cout << "--------------------------------" << endl;
+		cout << "|                              |" << endl;
+		cout << "|                              |" << endl;
+		cout << "|                              |" << endl;
+		cout << "--------------------------------" << endl;
+		setcur(3, 11);
+		SetConsoleTextAttribute(hconsole, White);
+		cout << "Введите имя: ";
+		cin >> name;
+		level = 2;
+		select = 0;
+		while (level == 2)
+		{
+			printMenu(30, 20, Red);
+			input();
+		}
+		level = 0;
+		if (select == 0)
+		{
+			hero->set_armor(armor);
+			hero->set_health(health);
+			hero->set_damage(damage);
+			hero->set_name(name);
+			list.insert(hero);
+			//insert(Item::createItem(name,2,list.size()-1));
+		}
+	}
 	void Application :: print_heroes(int shiftX, int shiftY, int borderColor)
 	{
 		SetConsoleTextAttribute(hconsole, borderColor);
@@ -416,18 +663,18 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 				{
 					SetConsoleTextAttribute(hconsole, 7);
 				}
-				if (list[i]->get_type() == character::Type::Knight)
+				if (list[i]->equals(make_shared<character::Knight>(0,0,0,"")))
 				{
 					hero_class = "Рыцарь: ";
 					color = DarkGray;
 
 				}
-				else if (list[i]->get_type() == character::Type::Assasin)
+				else if (list[i]->equals(make_shared<character::Assasin>(0, 0, 0, "")))
 				{
 					hero_class = "Ассасин: ";
 					color = LightRed;
 				}
-				else if (list[i]->get_type() == character::Type::Berserk)
+				else if (list[i]->equals(make_shared<character::Berserk>(0, 0, 0, "")))
 				{
 					hero_class = "Берсерк: ";
 					color = Brown;
@@ -451,7 +698,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 						}
 					}
 				}
-				cout << setw(31) << hero_class + list[i]->get_name();;
+				cout << setw(31) << hero_class + list[i]->get_name();
 				 
 				//cout << list[i]->get_name();
 				SetConsoleTextAttribute(hconsole, borderColor);
@@ -474,7 +721,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 		string passabylity;
 		string passabylityname;
 		int color = 0;
-		if (list[index]->get_type() == character::Type::Knight)
+		if (list[index]->equals(make_shared<character::Knight>(0, 0, 0, "")))
 		{
 			hero_class = "Рыцарь";
 			color = DarkGray;
@@ -486,7 +733,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 
 
 		}
-		else if (list[index]->get_type() == character::Type::Assasin)
+		else if (list[index]->equals(make_shared<character::Assasin>(0, 0, 0, "")))
 		{
 			hero_class = "Ассасин";
 			color = LightRed;
@@ -496,7 +743,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 			passabylity = " (Пассивная) Вероятность 25% повторной атаки в этот же ход.";
 			abylity = " Любая следующая атака по персонажу будет обречена на 100% промах.";
 		}
-		else if (list[index]->get_type() == character::Type::Berserk)
+		else if (list[index]->equals(make_shared<character::Berserk>(0, 0, 0, "")))
 		{
 			hero_class = "Берсерк";
 			color = Brown;
@@ -562,7 +809,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 		count = 2;
 		int dop_damage = list[index]->get_damage() - list[index]->get_normal_damage();
 		int dop_armor = list[index]->get_armor() - list[index]->get_normal_armor();
-		if (list[index]->get_type() != Type::Assasin)
+		if (!list[index]->equals(make_shared<character::Assasin>(0, 0, 0, "")))
 		{
 			
 			setcur(50 * index + 19, 6);
@@ -675,7 +922,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 			}
 			else if (select == 0)
 			{
-				list.remove(list[index]);
+				list.remove(index);
 			}
 			select = 0;
 		}
@@ -716,34 +963,34 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 			characters.insert(hero2);
 			list = characters;
 			int count = 0;
-			int old_health;
+			float old_health;
 			int color;
 			string abylityname;
 			string passabylityname1;
 			string passabylityname2;
 
-			if (list[0]->get_type() == Type::Knight)
+			if (list[0]->equals(make_shared<character::Knight>(0, 0, 0, "")))
 			{
 				passabylityname1 = "Прочные доспехи";
 			}
-			else if (list[0]->get_type() == Type::Assasin)
+			else if (list[0]->equals(make_shared<character::Assasin>(0, 0, 0, "")))
 			{
 				passabylityname1 = "Неистовство ветра";
 			}
-			else if (list[0]->get_type() == Type::Berserk)
+			else if (list[0]->equals(make_shared<character::Berserk>(0, 0, 0, "")))
 			{
 				passabylityname1 = "Тяжелая рука";
 			}
 
-			if (list[1]->get_type() == Type::Knight)
+			if (list[1]->equals(make_shared<character::Knight>(0, 0, 0, "")))
 			{
 				passabylityname2 = "Прочные доспехи";
 			}
-			else if (list[1]->get_type() == Type::Assasin)
+			else if (list[1]->equals(make_shared<character::Assasin>(0, 0, 0, "")))
 			{
 				passabylityname2 = "Неистовство ветра";
 			}
-			else if (list[1]->get_type() == Type::Berserk)
+			else if (list[1]->equals(make_shared<character::Berserk>(0, 0, 0, "")))
 			{
 				passabylityname2 = "Тяжелая рука";
 			}
@@ -764,19 +1011,19 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 					index1 = 1;
 					index2 = 0;
 				}
-				if (list[index2]->get_type() == Type::Knight)
+				if (list[index2]->equals(make_shared<character::Knight>(0, 0, 0, "")))
 				{
 					color = DarkGray;
 					abylityname = "Защитная стойка";
 					
 				}
-				else if (list[index2]->get_type() == Type::Assasin)
+				else if (list[index2]->equals(make_shared<character::Assasin>(0, 0, 0, "")))
 				{
 					color = LightRed;
 					abylityname = "Шаг в тень";
 					
 				}
-				else if (list[index2]->get_type() == Type::Berserk)
+				else if (list[index2]->equals(make_shared<character::Berserk>(0, 0, 0, "")))
 				{
 					color = Brown;
 					abylityname = "Ярость безумца";
@@ -818,7 +1065,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 					list[index2]->ability();
 					SetConsoleTextAttribute(hconsole, LightCyan);
 					cout << abylityname;
-					if (list[index2]->get_type() != Type::Assasin)
+					if (list[index2]->equals(make_shared<character::Assasin>(0, 0, 0, "")))
 					{
 						int dop_damage = list[index2]->get_damage() - list[index2]->get_normal_damage();
 						int dop_armor = list[index2]->get_armor()  - list[index2]->get_normal_armor();
@@ -872,7 +1119,7 @@ void Application::printMenu(int shiftX, int shiftY, int borderColor)
 					cout << passabylityname2;
 				}
 				SetConsoleTextAttribute(hconsole, White);
-				if (list[index2]->get_type() == Type::Assasin && list[index2]->get_abylity_proc())
+				if (list[index2]->equals(make_shared<character::Assasin>(0, 0, 0, "")) && list[index2]->get_abylity_proc())
 				{
 					Sleep(1000);
 					old_health = list[index1]->get_health();

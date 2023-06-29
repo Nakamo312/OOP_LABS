@@ -67,7 +67,9 @@ namespace application
 		ItemPtr operator[](const int index) const; 
 		void input();
 		int get_level()const;
-		void createHero(character::Type type);
+		void createKnight();
+		void createAssasin();
+		void createBerserk();
 		void setcur(int x, int y);//установка курсора на позицию  x y 
 		void print_heroes(int shiftX, int shiftY, int borderColor);
 		void print_heroe(int shiftX, int shiftY,int index, bool full_description);
